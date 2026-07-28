@@ -1,0 +1,40 @@
+---
+interface Props { title?: string; text?: string; }
+const {
+  title = 'Lassen Sie uns über Ihr Projekt sprechen.',
+  text = 'Kostenlose Erstberatung, ehrliche Einschätzung, Rückmeldung in der Regel innerhalb von 24 Stunden.'
+} = Astro.props;
+---
+<section class="section section--dark">
+  <div class="wrap cta-band">
+    <div class="cta-copy">
+      <h2>{title}</h2>
+      <p class="lead">{text}</p>
+    </div>
+    <a class="btn btn--block-mobile" href="/kontakt/">
+      <span>Projekt unverbindlich anfragen</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(2.5rem, 7vw, 7rem);
+  }
+  .cta-copy { max-width: 45rem; }
+  .cta-band h2 { max-width: 23ch; }
+  .cta-band .btn { max-width: 100%; }
+
+  @media (min-width: 48.01rem) {
+    .cta-band .btn { white-space: nowrap; }
+  }
+
+  @media (max-width: 48rem) {
+    .cta-band { grid-template-columns: 1fr; }
+    .cta-band .btn { justify-self: start; }
+  }
+</style>

@@ -1,0 +1,115 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../../components/CtaBand.astro';
+
+export async function getStaticPaths() {
+  const leistungen = await getCollection('leistungen');
+  return leistungen.map((leistung) => ({ params: { slug: leistung.id }, props: { leistung } }));
+}
+
+const { leistung } = Astro.props;
+const { Content } = await render(leistung);
+const alle = (await getCollection('leistungen')).sort((a, b) => a.data.reihenfolge - b.data.reihenfolge);
+const weitere = alle.filter((item) => item.id !== leistung.id);
+---
+<Base
+  title={`${leistung.data.title} | wunschausbau.de – Innenausbau Wittlich, Trier & Mosel`}
+  description={leistung.data.metaDescription}
+>
+  <article>
+    <section class="section detail-head">
+      <div class="wrap head-grid">
+        <div class="head-copy">
+          <p class="eyebrow"><a href="/leistungen/" class="crumb">Leistungen</a></p>
+          <h1>{leistung.data.title}</h1>
+          <p class="lead">{leistung.data.kurztext}</p>
+          <a class="btn head-cta" href="/kontakt/">Projekt anfragen</a>
+        </div>
+        <div class="head-media">
+          <Image src={leistung.data.bild} alt={leistung.data.bildAlt} widths={[640, 1024]} sizes="(max-width: 56rem) 100vw, 50vw" quality={76} format="webp" loading="eager" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--sand">
+      <div class="wrap prose">
+        <Content />
+      </div>
+    </section>
+  </article>
+
+  <section class="section" aria-label="Weitere Leistungen">
+    <div class="wrap">
+      <p class="eyebrow">Weitere Leistungen</p>
+      <ul class="weitere">
+        {weitere.map((item) => (
+          <li><a href={`/leistungen/${item.id}/`}>{item.data.title}<span aria-hidden="true">→</span></a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .head-grid {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(3rem, 7vw, 7rem);
+  }
+  .head-copy { max-width: 34rem; }
+  .head-cta { margin-top: var(--space-4); }
+  .head-media { overflow: hidden; border-radius: var(--radius); }
+  .head-media :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .crumb { text-decoration: none; }
+  .prose { max-width: 51rem; }
+  .prose :global(h2) { margin: var(--space-5) 0 var(--space-2); font-size: clamp(1.55rem, 2.6vw, 2rem); }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .prose :global(p) { margin-bottom: var(--space-2); color: var(--ink-soft); }
+  .prose :global(ul) {
+    display: grid;
+    gap: .5rem;
+    margin: 0 0 var(--space-2) 1.25rem;
+    color: var(--ink-soft);
+  }
+  .weitere {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-top: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+  .weitere a {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    min-height: 2.8rem;
+    padding: .55rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: var(--text-sm);
+    font-weight: 550;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .weitere a:hover { color: var(--brass-deep); border-color: var(--brass); background: var(--sand); }
+  }
+
+  @media (max-width: 56rem) {
+    .head-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+    .head-media { grid-row: 1; }
+    .head-copy { grid-row: 2; }
+  }
+
+  @media (max-width: 36rem) {
+    .head-cta { width: 100%; }
+    .weitere { display: grid; }
+    .weitere a { justify-content: space-between; }
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+const steps = [
+  { nr: '01', title: 'Beratung', text: 'Wir hören zu, verstehen Ihre Wünsche und beraten ehrlich zu Möglichkeiten, Materialien und Aufwand.' },
+  { nr: '02', title: 'Planung', text: 'Wir nehmen Maß, stimmen Details ab und planen Ihr Projekt sauber, realistisch und nachvollziehbar.' },
+  { nr: '03', title: 'Umsetzung', text: 'Wir setzen Ihr Projekt termintreu, ordentlich und mit hohem handwerklichem Anspruch um.' }
+];
+---
+<ol class="process">
+  {steps.map((step, index) => (
+    <li class="reveal" style={`--reveal-delay: ${index * 55}ms`}>
+      <span class="nr" aria-hidden="true">{step.nr}</span>
+      <div>
+        <h3>{step.title}</h3>
+        <p>{step.text}</p>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .process {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    list-style: none;
+  }
+  .process li {
+    display: grid;
+    min-width: 0;
+    gap: var(--space-4);
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    border-right: 1px solid var(--line);
+  }
+  .process li:last-child { border-right: 0; }
+  .nr {
+    display: block;
+    color: var(--brass);
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  h3 { margin-bottom: .65rem; }
+  p { color: var(--ink-soft); font-size: var(--text-sm); }
+
+  @media (max-width: 56rem) {
+    .process { grid-template-columns: 1fr; }
+    .process li {
+      grid-template-columns: 3rem minmax(0, 1fr);
+      gap: var(--space-3);
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .process li:last-child { border-bottom: 0; }
+  }
+
+  @media (max-width: 30rem) {
+    .process li { grid-template-columns: 1fr; gap: var(--space-2); }
+  }
+</style>

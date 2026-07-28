@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import settings from '../data/settings.json';
+---
+<Base
+  title="Vielen Dank | wunschausbau.de"
+  description="Ihre Anfrage ist bei uns eingegangen. Wir melden uns in der Regel innerhalb von 24 Stunden."
+  noindex
+>
+  <section class="section status-page">
+    <div class="wrap status-page__inner">
+      <p class="eyebrow">Anfrage gesendet</p>
+      <h1>Vielen Dank.</h1>
+      <p class="lead">
+        Ihre Anfrage ist bei uns eingegangen. Wir melden uns in der Regel innerhalb von 24 Stunden.
+        Bei dringenden Fragen erreichen Sie uns unter <a href={`tel:${settings.telefonLink}`}>{settings.telefon}</a>.
+      </p>
+      <a class="btn" href="/">Zur Startseite</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .eyebrow { justify-content: center; }
+</style>

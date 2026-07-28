@@ -1,0 +1,288 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import settings from '../data/settings.json';
+import faq from '../data/faq.json';
+
+const leistungen = (await getCollection('leistungen')).sort((a, b) => a.data.reihenfolge - b.data.reihenfolge);
+---
+<Base
+  title="Kontakt & Anfrage | wunschausbau.de – Innenausbau Wittlich, Trier & Mosel"
+  description="Projekt anfragen: kostenlose Erstberatung für Innenausbau und Renovierung in Wittlich, Trier und der Moselregion. Rückmeldung in der Regel innerhalb von 24 Stunden."
+>
+  <section class="section">
+    <div class="wrap kontakt-grid">
+      <div class="kontakt-intro">
+        <p class="eyebrow">Kontakt</p>
+        <h1>Worum geht es bei Ihrem Projekt?</h1>
+        <p class="lead">
+          Erzählen Sie uns kurz, was geplant ist. Wir prüfen Ihre Anfrage persönlich und melden
+          uns mit einer ehrlichen ersten Einschätzung – in der Regel innerhalb von 24 Stunden.
+        </p>
+
+        <ul class="direkt" aria-label="Direkte Kontaktwege">
+          <li><span>Telefon</span><a href={`tel:${settings.telefonLink}`}>{settings.telefon}</a></li>
+          <li><span>E-Mail</span><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
+          <li><span>WhatsApp</span><a href={settings.whatsapp} target="_blank" rel="noopener noreferrer">Nachricht schreiben</a></li>
+          <li><span>Region</span><b>{settings.region}</b></li>
+        </ul>
+        <p class="foto-hinweis">Fotos oder Pläne? Schicken Sie sie uns nach dem Erstkontakt einfach per WhatsApp oder E-Mail.</p>
+      </div>
+
+      <form class="anfrage tile" method="POST" action="/api/anfrage">
+        <fieldset>
+          <legend>Leistung auswählen <b aria-hidden="true">*</b></legend>
+          <div class="choice-grid">
+            {leistungen.map((leistung, index) => (
+              <label class="choice">
+                <input type="radio" name="leistung" value={leistung.data.title} required={index === 0} />
+                <span>{leistung.data.title}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div class="feld-grid">
+          <label>Name <b aria-hidden="true">*</b>
+            <input name="name" autocomplete="name" required maxlength="120" />
+          </label>
+          <label>Telefon <b aria-hidden="true">*</b>
+            <input name="telefon" type="tel" autocomplete="tel" inputmode="tel" required maxlength="40" />
+          </label>
+          <label>E-Mail
+            <input name="email" type="email" autocomplete="email" inputmode="email" maxlength="160" />
+          </label>
+          <label>Ort / PLZ <b aria-hidden="true">*</b>
+            <input name="ort" autocomplete="postal-code" required maxlength="120" />
+          </label>
+          <label>Objektart
+            <select name="objektart">
+              <option value="">Bitte auswählen</option>
+              <option>Wohnung</option>
+              <option>Haus</option>
+              <option>Gewerbeobjekt</option>
+              <option>Außenbereich</option>
+            </select>
+          </label>
+          <label>Gewünschter Zeitraum
+            <select name="zeitraum">
+              <option value="">Bitte auswählen</option>
+              <option>So bald wie möglich</option>
+              <option>In den nächsten 3 Monaten</option>
+              <option>In den nächsten 6 Monaten</option>
+              <option>Noch offen</option>
+            </select>
+          </label>
+        </div>
+
+        <label>Projektbeschreibung <b aria-hidden="true">*</b>
+          <textarea name="beschreibung" required rows="5" maxlength="4000"
+            placeholder="Was soll gemacht werden? Gibt es Maße, Materialien oder Besonderheiten?"></textarea>
+        </label>
+
+        <label>Grober Budgetrahmen (optional)
+          <select name="budget">
+            <option value="">Noch offen</option>
+            <option>Bis 5.000 €</option>
+            <option>5.000 – 15.000 €</option>
+            <option>15.000 – 30.000 €</option>
+            <option>Über 30.000 €</option>
+          </select>
+        </label>
+
+        <fieldset>
+          <legend>Wie dürfen wir Sie kontaktieren?</legend>
+          <div class="choice-row">
+            <label class="choice"><input type="radio" name="kontaktweg" value="Telefon" checked /><span>Telefon</span></label>
+            <label class="choice"><input type="radio" name="kontaktweg" value="E-Mail" /><span>E-Mail</span></label>
+            <label class="choice"><input type="radio" name="kontaktweg" value="WhatsApp" /><span>WhatsApp</span></label>
+          </div>
+        </fieldset>
+
+        <p class="hp" aria-hidden="true">
+          <label>Firma <input name="firma" tabindex="-1" autocomplete="off" /></label>
+        </p>
+        <input type="hidden" name="ts" value={String(Date.now())} />
+
+        <label class="privacy">
+          <input type="checkbox" name="datenschutz" required />
+          <span>Ich stimme zu, dass meine Angaben zur Bearbeitung meiner Anfrage verarbeitet werden.
+            Details in der <a href="/datenschutz/">Datenschutzerklärung</a>. <b aria-hidden="true">*</b></span>
+        </label>
+
+        <button class="btn submit" type="submit">
+          <span>Projekt unverbindlich anfragen</span>
+          <span aria-hidden="true">→</span>
+        </button>
+        <p class="form-note">Keine Verpflichtung. Pflichtfelder sind mit * markiert.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="faq-titel">
+    <div class="wrap">
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 id="faq-titel">Gut zu wissen.</h2>
+      <div class="faq">
+        {faq.map((item) => (
+          <details class="tile">
+            <summary><span>{item.frage}</span><span class="faq-icon" aria-hidden="true"></span></summary>
+            <p>{item.antwort}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kontakt-grid {
+    display: grid;
+    grid-template-columns: minmax(18rem, .82fr) minmax(0, 1.18fr);
+    align-items: start;
+    gap: clamp(3rem, 8vw, 8rem);
+  }
+  .kontakt-intro {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-4));
+  }
+  .direkt {
+    margin-top: var(--space-4);
+    padding: 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+  .direkt li {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    align-items: baseline;
+    padding-block: .85rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .direkt span {
+    color: var(--ink-muted);
+    font-size: .75rem;
+    font-weight: 650;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+  .direkt a { overflow-wrap: anywhere; font-weight: 550; }
+  .foto-hinweis { margin-top: var(--space-3); color: var(--ink-soft); font-size: var(--text-sm); }
+
+  .anfrage {
+    display: grid;
+    gap: var(--space-4);
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    box-shadow: var(--shadow-soft);
+  }
+  fieldset { padding: 0; border: 0; }
+  legend, label { font-size: var(--text-sm); font-weight: 650; }
+  legend { margin-bottom: .65rem; }
+  label { display: grid; gap: .45rem; }
+  label b { color: var(--error); }
+  input:not([type="radio"]):not([type="checkbox"]), select, textarea {
+    width: 100%;
+    min-height: 3.1rem;
+    padding: .7rem .85rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: inherit;
+    background: var(--paper);
+    transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  textarea { min-height: 9rem; resize: vertical; }
+  input:not([type="radio"]):not([type="checkbox"]):focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--brass);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(185, 130, 47, .16);
+  }
+  input:user-invalid, textarea:user-invalid { border-color: var(--error); }
+  .feld-grid, .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  .choice-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .choice { position: relative; display: block; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .choice input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .choice span {
+    display: flex;
+    align-items: center;
+    min-height: 3rem;
+    padding: .55rem .9rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    font-weight: 550;
+    transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
+  }
+  .choice:active span { transform: scale(.985); }
+  .choice input:checked + span { border-color: var(--brass-deep); background: var(--sand-deep); font-weight: 650; }
+  .choice input:focus-visible + span { outline: 3px solid var(--brass); outline-offset: 2px; }
+  .hp { position: absolute; left: -9999px; }
+  .privacy {
+    display: flex;
+    align-items: flex-start;
+    gap: .7rem;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+  .privacy input {
+    flex: 0 0 auto;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: .2rem;
+    accent-color: var(--brass-deep);
+  }
+  .submit { justify-self: start; }
+  .form-note { color: var(--ink-soft); font-size: var(--text-sm); }
+
+  .faq { display: grid; max-width: 54rem; gap: .75rem; margin-top: var(--space-4); }
+  details { padding: 0; overflow: hidden; }
+  summary {
+    display: flex;
+    min-height: 3.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: .8rem var(--space-3);
+    font-weight: 650;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .faq-icon {
+    position: relative;
+    flex: 0 0 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+  .faq-icon::before, .faq-icon::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: .9rem;
+    height: 1px;
+    background: var(--brass-deep);
+    content: "";
+    transform: translate(-50%, -50%);
+    transition: transform var(--dur) var(--ease-move);
+  }
+  .faq-icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+  details[open] .faq-icon::after { transform: translate(-50%, -50%) rotate(0); }
+  details p { padding: 0 var(--space-3) var(--space-3); color: var(--ink-soft); }
+
+  @media (max-width: 56rem) {
+    .kontakt-grid { grid-template-columns: 1fr; }
+    .kontakt-intro { position: static; }
+  }
+
+  @media (max-width: 36rem) {
+    .feld-grid, .choice-grid { grid-template-columns: 1fr; }
+    .direkt li { grid-template-columns: 5.5rem minmax(0, 1fr); }
+    .choice-row { display: grid; grid-template-columns: 1fr; }
+    .submit { width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    input, select, textarea, .choice span, .faq-icon::before, .faq-icon::after { transition: none; }
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Testimonials from '../components/Testimonials.astro';
+import CtaBand from '../components/CtaBand.astro';
+import interior from '../assets/service-interior.png';
+import floors from '../assets/service-floors.png';
+import doors from '../assets/service-doors-windows.png';
+import terrace from '../assets/service-terrace.png';
+import drywall from '../assets/service-drywall.png';
+import sun from '../assets/service-sun-protection.png';
+
+const bilder = [
+  { src: interior, alt: 'Wohnraum mit maßgefertigter Holzvertäfelung und Einbauregal', label: 'Innenausbau' },
+  { src: floors, alt: 'Hochwertig verlegter Eichenparkettboden', label: 'Böden' },
+  { src: doors, alt: 'Moderne Innentür und Fensterfront nach der Montage', label: 'Innentüren' },
+  { src: drywall, alt: 'Trockenbauwand mit sauberer Decke und Einbauspots', label: 'Trockenbau' },
+  { src: sun, alt: 'Wohnzimmer mit maßgefertigten Plissees als Sonnenschutz', label: 'Sonnenschutz' },
+  { src: terrace, alt: 'Holzterrasse mit Blick in den Garten', label: 'Holzterrassen' }
+];
+---
+<Base
+  title="Referenzen | wunschausbau.de – Arbeiten aus Wittlich, Trier & Mosel"
+  description="Einblicke in unsere Arbeit: Böden, Innentüren, Trockenbau, Sonnenschutz und Holzterrassen in Wittlich, Trier und der Moselregion."
+>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Referenzen</p>
+      <h1>Unsere Arbeiten.</h1>
+      <p class="lead">Ein Eindruck davon, worauf wir Wert legen: saubere Linien, exakte Übergänge, stimmige Räume.</p>
+
+      <ul class="galerie">
+        {bilder.map((bild, index) => (
+          <li class="reveal" style={`--reveal-delay: ${(index % 2) * 55}ms`}>
+            <div class="gallery-media">
+              <Image src={bild.src} alt={bild.alt} widths={[480, 800, 1200]} sizes="(max-width: 56rem) 100vw, 50vw" quality={76} format="webp" loading="lazy" />
+            </div>
+            <span class="label">{bild.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <Testimonials />
+  <CtaBand title="Ihr Projekt könnte das nächste sein." />
+</Base>
+
+<style>
+  .galerie {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+  .galerie li {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--sand);
+  }
+  .gallery-media { overflow: hidden; }
+  .galerie :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    transition: transform 300ms var(--ease-move);
+  }
+  .label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: .55rem 1rem;
+    color: var(--paper-inverse);
+    background: rgba(23, 24, 27, .94);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: .05em;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .galerie li:hover :global(img) { transform: scale(1.025); }
+  }
+
+  @media (max-width: 56rem) {
+    .galerie { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .galerie :global(img) { transition: none; }
+  }
+</style>
