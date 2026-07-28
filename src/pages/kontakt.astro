@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import settings from '../data/settings.json';
 import faq from '../data/faq.json';
+import { withBase } from '../lib/paths';
 
 const leistungen = (await getCollection('leistungen')).sort((a, b) => a.data.reihenfolge - b.data.reihenfolge);
 ---
@@ -107,7 +108,7 @@ const leistungen = (await getCollection('leistungen')).sort((a, b) => a.data.rei
         <label class="privacy">
           <input type="checkbox" name="datenschutz" required />
           <span>Ich stimme zu, dass meine Angaben zur Bearbeitung meiner Anfrage verarbeitet werden.
-            Details in der <a href="/datenschutz/">Datenschutzerklärung</a>. <b aria-hidden="true">*</b></span>
+            Details in der <a href={withBase('/datenschutz/')}>Datenschutzerklärung</a>. <b aria-hidden="true">*</b></span>
         </label>
 
         <button class="btn submit" type="submit">
