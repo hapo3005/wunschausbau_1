@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import settings from '../data/settings.json';
+import { withBase } from '../lib/paths';
 ---
 <Base
   title="Vielen Dank | wunschausbau.de"
@@ -15,7 +16,7 @@ import settings from '../data/settings.json';
         Ihre Anfrage ist bei uns eingegangen. Wir melden uns in der Regel innerhalb von 24 Stunden.
         Bei dringenden Fragen erreichen Sie uns unter <a href={`tel:${settings.telefonLink}`}>{settings.telefon}</a>.
       </p>
-      <a class="btn" href="/">Zur Startseite</a>
+      <a class="btn" href={withBase('/')}>Zur Startseite</a>
     </div>
   </section>
 </Base>
