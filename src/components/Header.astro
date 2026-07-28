@@ -1,17 +1,18 @@
 ---
 import settings from '../data/settings.json';
+import { withBase } from '../lib/paths';
 
 const nav = [
-  { href: '/leistungen/', label: 'Leistungen' },
-  { href: '/referenzen/', label: 'Referenzen' },
-  { href: '/ueber-uns/', label: 'Über uns' },
-  { href: '/kontakt/', label: 'Kontakt' }
+  { href: withBase('/leistungen/'), label: 'Leistungen' },
+  { href: withBase('/referenzen/'), label: 'Referenzen' },
+  { href: withBase('/ueber-uns/'), label: 'Über uns' },
+  { href: withBase('/kontakt/'), label: 'Kontakt' }
 ];
 const path = Astro.url.pathname;
 ---
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href="/" aria-label={`${settings.marke} – Startseite`}>
+    <a class="brand" href={withBase('/')} aria-label={`${settings.marke} – Startseite`}>
       <span class="brand-name">{settings.marke}</span>
       <span class="brand-claim">{settings.claim}</span>
     </a>
@@ -26,7 +27,7 @@ const path = Astro.url.pathname;
         </svg>
         <span>{settings.telefon}</span>
       </a>
-      <a class="btn nav-cta" href="/kontakt/">Projekt anfragen</a>
+      <a class="btn nav-cta" href={withBase('/kontakt/')}>Projekt anfragen</a>
     </nav>
 
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menü öffnen">
