@@ -6,6 +6,7 @@ import ProcessSteps from '../components/ProcessSteps.astro';
 import Testimonials from '../components/Testimonials.astro';
 import CtaBand from '../components/CtaBand.astro';
 import settings from '../data/settings.json';
+import { withBase } from '../lib/paths';
 import hero from '../assets/hero.png';
 
 const leistungen = (await getCollection('leistungen')).sort((a, b) => a.data.reihenfolge - b.data.reihenfolge);
@@ -39,8 +40,8 @@ const schema = {
           Wir schaffen Wohnräume, die Qualität sichtbar und spürbar machen.
         </p>
         <div class="hero-actions">
-          <a class="btn" href="/kontakt/">Kostenlose Beratung</a>
-          <a class="btn btn--ghost" href="/referenzen/">Arbeiten ansehen</a>
+          <a class="btn" href={withBase('/kontakt/')}>Kostenlose Beratung</a>
+          <a class="btn btn--ghost" href={withBase('/referenzen/')}>Arbeiten ansehen</a>
         </div>
       </div>
     </div>
@@ -65,7 +66,7 @@ const schema = {
       <h2>Alles aus einer Hand.</h2>
       <div class="service-grid">
         {leistungen.map((leistung, index) => (
-          <a class="service-card tile reveal" style={`--reveal-delay: ${(index % 3) * 55}ms`} href={`/leistungen/${leistung.id}/`}>
+          <a class="service-card tile reveal" style={`--reveal-delay: ${(index % 3) * 55}ms`} href={withBase(`/leistungen/${leistung.id}/`)}>
             <div class="service-media">
               <Image src={leistung.data.bild} alt={leistung.data.bildAlt} widths={[480, 800]} sizes="(max-width: 56rem) 100vw, 33vw" quality={72} format="webp" />
             </div>
