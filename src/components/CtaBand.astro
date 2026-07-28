@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/paths';
+
 interface Props { title?: string; text?: string; }
 const {
   title = 'Lassen Sie uns über Ihr Projekt sprechen.',
@@ -11,7 +13,7 @@ const {
       <h2>{title}</h2>
       <p class="lead">{text}</p>
     </div>
-    <a class="btn btn--block-mobile" href="/kontakt/">
+    <a class="btn btn--block-mobile" href={withBase('/kontakt/')}>
       <span>Projekt unverbindlich anfragen</span>
       <span aria-hidden="true">→</span>
     </a>
