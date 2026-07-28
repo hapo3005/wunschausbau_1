@@ -1,18 +1,18 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
+const isGitHubPages =
+  process.env.GITHUB_ACTIONS === 'true' &&
+  process.env.GITHUB_REPOSITORY === 'hapo3005/wunschausbau_1';
+
 export default defineConfig({
-  site: 'https://wunschausbau.de',
+  site: isGitHubPages ? 'https://hapo3005.github.io' : 'https://wunschausbau.de',
+  base: isGitHubPages ? '/wunschausbau_1' : '/',
   trailingSlash: 'always',
   integrations: [
     sitemap({
       filter: (page) => !page.endsWith('/danke/')
     })
   ],
-  vite: {
-    resolve: {
-      preserveSymlinks: true
-    }
-  },
   build: { inlineStylesheets: 'always' }
 });
