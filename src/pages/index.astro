@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
-import Testimonials from '../components/Testimonials.astro';
 import CtaBand from '../components/CtaBand.astro';
 import settings from '../data/settings.json';
 import { withBase } from '../lib/paths';
@@ -47,12 +46,12 @@ const schema = {
     </div>
   </section>
 
-  <section class="stats" aria-label="Kennzahlen">
+  <section class="stats" aria-label="Leistungsversprechen">
     <div class="wrap stats-grid">
-      <div><strong>{settings.stats.projekte}</strong><span>realisierte Projekte</span></div>
-      <div><strong>{settings.stats.bewertung}</strong><span>Google-Bewertung</span></div>
+      <div><strong>{leistungen.length}</strong><span>Leistungsbereiche</span></div>
+      <div><strong>Direkter Kontakt</strong><span>persönlich erreichbar</span></div>
       <div><strong>{settings.region}</strong><span>regional verwurzelt</span></div>
-      <div><strong>{settings.stats.rueckmeldung}</strong><span>Rückmeldung im Regelfall</span></div>
+      <div><strong>Saubere Übergabe</strong><span>bis ins Detail</span></div>
     </div>
   </section>
 
@@ -90,7 +89,6 @@ const schema = {
     </div>
   </section>
 
-  <Testimonials />
   <CtaBand />
 </Base>
 
