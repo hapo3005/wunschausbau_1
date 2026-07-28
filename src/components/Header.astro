@@ -1,6 +1,7 @@
 ---
 import settings from '../data/settings.json';
 import { withBase } from '../lib/paths';
+import logoUrl from '../assets/logo.svg?url';
 
 const nav = [
   { href: withBase('/leistungen/'), label: 'Leistungen' },
@@ -13,8 +14,11 @@ const path = Astro.url.pathname;
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href={withBase('/')} aria-label={`${settings.marke} – Startseite`}>
-      <span class="brand-name">{settings.marke}</span>
-      <span class="brand-claim">{settings.claim}</span>
+      <img class="brand-mark" src={logoUrl} width="449" height="452" alt="" />
+      <span class="brand-copy">
+        <span class="brand-name">{settings.marke}</span>
+        <span class="brand-claim">{settings.claim}</span>
+      </span>
     </a>
 
     <nav class="site-nav" aria-label="Hauptnavigation" id="site-nav">
@@ -58,11 +62,25 @@ const path = Astro.url.pathname;
   }
 
   .brand {
-    display: grid;
+    display: inline-flex;
+    align-items: center;
+    gap: .72rem;
     flex: 0 0 auto;
     color: var(--ink);
     line-height: 1.15;
     text-decoration: none;
+  }
+
+  .brand-mark {
+    width: 3.15rem;
+    height: 3.15rem;
+    flex: 0 0 auto;
+    object-fit: contain;
+  }
+
+  .brand-copy {
+    display: grid;
+    min-width: 0;
   }
 
   .brand-name {
@@ -136,6 +154,9 @@ const path = Astro.url.pathname;
   }
 
   @media (max-width: 56rem) {
+    .brand { gap: .62rem; }
+    .brand-mark { width: 2.85rem; height: 2.85rem; }
+
     .site-nav {
       position: absolute;
       top: 100%;
@@ -228,6 +249,11 @@ const path = Astro.url.pathname;
       visibility: visible;
       transition-delay: 0s;
     }
+  }
+
+  @media (max-width: 26rem) {
+    .brand-name { font-size: 1.08rem; }
+    .brand-claim { font-size: .6rem; letter-spacing: .11em; }
   }
 
   @media (prefers-reduced-motion: reduce) {
