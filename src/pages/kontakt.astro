@@ -6,6 +6,9 @@ import faq from '../data/faq.json';
 import { withBase } from '../lib/paths';
 
 const leistungen = (await getCollection('leistungen')).sort((a, b) => a.data.reihenfolge - b.data.reihenfolge);
+const isGitHubPreview = Astro.site?.hostname === 'hapo3005.github.io';
+const formAction = isGitHubPreview ? settings.whatsapp : '/api/anfrage';
+const formMethod = isGitHubPreview ? 'GET' : 'POST';
 ---
 <Base
   title="Kontakt & Anfrage | wunschausbau.de – Innenausbau Wittlich, Trier & Mosel"
@@ -30,7 +33,13 @@ const leistungen = (await getCollection('leistungen')).sort((a, b) => a.data.rei
         <p class="foto-hinweis">Fotos oder Pläne? Schicken Sie sie uns nach dem Erstkontakt einfach per WhatsApp oder E-Mail.</p>
       </div>
 
-      <form class="anfrage tile" method="POST" action="/api/anfrage">
+      <form
+        class="anfrage tile"
+        method={formMethod}
+        action={formAction}
+        data-preview-mode={isGitHubPreview ? 'whatsapp' : undefined}
+        data-whatsapp={isGitHubPreview ? settings.whatsapp : undefined}
+      >
         <fieldset>
           <legend>Leistung auswählen <b aria-hidden="true">*</b></legend>
           <div class="choice-grid">
@@ -115,7 +124,19 @@ const leistungen = (await getCollection('leistungen')).sort((a, b) => a.data.rei
           <span>Projekt unverbindlich anfragen</span>
           <span aria-hidden="true">→</span>
         </button>
-        <p class="form-note">Keine Verpflichtung. Pflichtfelder sind mit * markiert.</p>
+        <p class="form-note">
+          {isGitHubPreview
+            ? 'Vorschau: Nach dem Absenden öffnet sich WhatsApp mit Ihrer fertig vorbereiteten Anfrage.'
+            : 'Keine Verpflichtung. Pflichtfelder sind mit * markiert.'}
+        </p>
+        {isGitHubPreview && (
+          <noscript>
+            <p class="form-note">
+              Für die Anfrage über diese Vorschauseite wird JavaScript benötigt.
+              <a href={settings.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp direkt öffnen</a>.
+            </p>
+          </noscript>
+        )}
       </form>
     </div>
   </section>
@@ -287,3 +308,44 @@ const leistungen = (await getCollection('leistungen')).sort((a, b) => a.data.rei
     input, select, textarea, .choice span, .faq-icon::before, .faq-icon::after { transition: none; }
   }
 </style>
+
+<script>
+  const previewForm = document.querySelector<HTMLFormElement>('form[data-preview-mode="whatsapp"]');
+
+  previewForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    if (!previewForm.reportValidity()) return;
+
+    const data = new FormData(previewForm);
+    if (String(data.get('firma') ?? '').trim()) return;
+
+    const value = (name: string) => String(data.get(name) ?? '').trim();
+    const optionalLine = (label: string, name: string) => {
+      const entry = value(name);
+      return entry ? `${label}: ${entry}` : '';
+    };
+
+    const message = [
+      'Guten Tag, ich möchte ein Projekt unverbindlich anfragen.',
+      '',
+      `Leistung: ${value('leistung')}`,
+      `Name: ${value('name')}`,
+      `Telefon: ${value('telefon')}`,
+      optionalLine('E-Mail', 'email'),
+      `Ort / PLZ: ${value('ort')}`,
+      optionalLine('Objektart', 'objektart'),
+      optionalLine('Zeitraum', 'zeitraum'),
+      optionalLine('Budgetrahmen', 'budget'),
+      `Bevorzugter Kontaktweg: ${value('kontaktweg')}`,
+      '',
+      'Projektbeschreibung:',
+      value('beschreibung')
+    ].filter(Boolean).join('\n');
+
+    const target = previewForm.dataset.whatsapp;
+    if (!target) return;
+
+    window.location.assign(`${target}?text=${encodeURIComponent(message)}`);
+  });
+</script>
