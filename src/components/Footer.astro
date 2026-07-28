@@ -1,5 +1,6 @@
 ---
 import settings from '../data/settings.json';
+import { withBase } from '../lib/paths';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
@@ -21,18 +22,18 @@ const year = new Date().getFullYear();
     <nav aria-label="Seiten">
       <h4>Seiten</h4>
       <ul>
-        <li><a href="/leistungen/">Leistungen</a></li>
-        <li><a href="/referenzen/">Referenzen</a></li>
-        <li><a href="/ueber-uns/">Über uns</a></li>
-        <li><a href="/kontakt/">Kontakt</a></li>
+        <li><a href={withBase('/leistungen/')}>Leistungen</a></li>
+        <li><a href={withBase('/referenzen/')}>Referenzen</a></li>
+        <li><a href={withBase('/ueber-uns/')}>Über uns</a></li>
+        <li><a href={withBase('/kontakt/')}>Kontakt</a></li>
       </ul>
     </nav>
     <nav aria-label="Rechtliches">
       <h4>Rechtliches</h4>
       <ul>
-        <li><a href="/impressum/">Impressum</a></li>
-        <li><a href="/datenschutz/">Datenschutz</a></li>
-        <li><a href="/agb/">AGB</a></li>
+        <li><a href={withBase('/impressum/')}>Impressum</a></li>
+        <li><a href={withBase('/datenschutz/')}>Datenschutz</a></li>
+        <li><a href={withBase('/agb/')}>AGB</a></li>
       </ul>
     </nav>
   </div>
